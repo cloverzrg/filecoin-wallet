@@ -28,7 +28,6 @@ steps:
       - make -C extern/filecoin-ffi
       - go mod download
       - buildflags="-X 'main.BuildTime=`TZ=\"Asia/Shanghai\" date -Iseconds`' -X 'main.GitMessage=`git --no-pager log -1 --oneline`' -X 'main.GoVersion=$(go version)'" && go build -ldflags "$buildflags" -o go-bin
-      - find . ! -name "." ! -name 'go-bin' ! -name 'Dockerfile' -exec rm -rf {} +
 
   - name: docker-build-push
     image: plugins/docker
