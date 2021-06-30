@@ -9,16 +9,14 @@ import (
 var DB *gorm.DB
 
 func Connect() (err error) {
-	_, err = os.Stat("./data")
-	if err == os.ErrNotExist {
-		_, err := os.Create("./data")
+	if _, err := os.Stat("./data"); os.IsNotExist(err) {
+		err := os.Mkdir("./data", os.ModePerm)
 		if err != nil {
 			return err
 		}
-	} else if err != nil {
-		return err
 	}
 	DB, err = gorm.Open("sqlite3", "./data/sqlite3.db")
+	DB = DB.Debug()
 	if err != nil {
 		return err
 	}

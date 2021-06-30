@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/hex"
 	"github.com/cloverzrg/filecoin-wallet/db"
+	"github.com/cloverzrg/filecoin-wallet/logger"
 	"github.com/cloverzrg/filecoin-wallet/models"
 	"github.com/filecoin-project/lotus/chain/types"
 	"github.com/filecoin-project/lotus/chain/wallet"
@@ -33,12 +34,13 @@ func NewKey(c *gin.Context) {
 		Type:       generateKey.Type,
 		PrivateKey: hex.EncodeToString(generateKey.PrivateKey),
 		PublicKey:  hex.EncodeToString(generateKey.PublicKey),
-		Address:    generateKey.Address,
+		Address:    generateKey.Address.String(),
 	}
-	err = db.DB.Create(keyStore).Error
+	err = db.DB.Create(&keyStore).Error
 	if err != nil {
 		c.JSON(500, err)
 		return
 	}
+	logger.Info("new address:", keyStore.Address)
 	c.Redirect(307, "/")
 }
