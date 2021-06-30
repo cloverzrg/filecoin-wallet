@@ -1,0 +1,45 @@
+kind: pipeline
+name: default
+type: docker
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  depth: 1
+
+node:
+  cloud: ali
+  location: hongkong
+
+volumes:
+  - name: cache
+    host:
+      path: /var/docker/drone-github/cache/gomod
+
+
+steps:
+  - name: build
+    image: golang:alpine
+    volumes:
+      - name: cache
+        path: /go/pkg/mod
+    commands:
+      - apk update && apk add --no-cache git build-base tzdata
+      - go mod download
+      - buildflags="-X 'main.BuildTime=`TZ=\"Asia/Shanghai\" date -Iseconds`' -X 'main.GitMessage=`git --no-pager log -1 --oneline`' -X 'main.GoVersion=$(go version)'" && go build -ldflags "$buildflags" -o go-bin
+      - find . ! -name "." ! -name 'go-bin' ! -name 'Dockerfile' -exec rm -rf {} +
+
+  - name: docker-build-push
+    image: plugins/docker
+    when:
+      branch:
+        - master
+    settings:
+      repo: cloverzrg/filecoin-wallet
+      tags: latest
+      username:
+        from_secret: registry-username
+      password:
+        from_secret: registry-password

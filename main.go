@@ -2,12 +2,19 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/cloverzrg/filecoin-wallet/api"
 	"github.com/cloverzrg/filecoin-wallet/db"
 	"github.com/cloverzrg/filecoin-wallet/filecoin"
 	"github.com/cloverzrg/filecoin-wallet/logger"
 	"github.com/cloverzrg/filecoin-wallet/models"
 	"github.com/filecoin-project/go-address"
+)
+
+var (
+	BuildTime  string
+	GoVersion  string
+	GitMessage string
 )
 
 func main() {
@@ -18,6 +25,8 @@ func main() {
 }
 
 func init() {
+	msg := fmt.Sprintf("BuildAt: %s\nBuildBy: %s\nGit：%s", BuildTime, GoVersion, GitMessage)
+	fmt.Println(msg)
 	err := db.Connect()
 	if err != nil {
 		logger.Panic(err)
