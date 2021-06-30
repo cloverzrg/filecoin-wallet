@@ -28,6 +28,6 @@ RUN mv templates /app/templates
 EXPOSE 80
 ENV ENDPOINT https://calibration.node.glif.io
 ENV TOKEN ''
-WORKDIR app
+WORKDIR /app
 VOLUME /app/data
 CMD ["/app/fil-wallet"]
