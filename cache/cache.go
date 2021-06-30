@@ -20,8 +20,11 @@ var CommonCache *cache.Cache
 
 var StateListMessagesCache *cache.Cache
 
+var BalanceCache *cache.Cache
 
 func init() {
 	CommonCache = cache.New(30*time.Second, 60*time.Second)
 	StateListMessagesCache = cache.New(30*time.Second, 120*time.Second)
+
+	BalanceCache = cache.New(30*time.Second, 120*time.Second)
 }

@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"context"
 	"github.com/cloverzrg/filecoin-wallet/db"
 	"github.com/cloverzrg/filecoin-wallet/filecoin"
+	"github.com/cloverzrg/filecoin-wallet/logger"
 	"github.com/cloverzrg/filecoin-wallet/models"
 	"github.com/filecoin-project/go-address"
 	"github.com/gin-gonic/gin"
@@ -23,20 +23,22 @@ func AddressDetail(c *gin.Context) {
 		c.JSON(500, err)
 		return
 	}
-	balance, err := filecoin.Client.WalletBalance(context.Background(), fromString)
+
+	fil, err := filecoin.WalletBalanceCache(fromString)
 	if err != nil {
 		c.JSON(500, err)
 		return
 	}
 
-	messages, err := filecoin.StateListMessages(fromString)
+	messages, err := filecoin.StateListMessagesCache(fromString)
 	if err != nil {
 		c.JSON(500, err)
 		return
 	}
+	logger.Info("StateListMessages size:", len(messages))
 	c.HTML(200, "address_detail.tmpl", gin.H{
 		"data":     data,
-		"balance":  balance.String(),
+		"balance":  fil.String(),
 		"messages": messages,
 	})
 }

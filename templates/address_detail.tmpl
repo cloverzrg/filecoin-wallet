@@ -7,13 +7,13 @@
 私钥：{{.data.PrivateKey}}<br>
 余额：{{.balance}}<br>
 
-<br><br>
-最近一天交易：
+<br>
+最近一天交易：<br>
 {{range $val := .messages}}
-     {{$val}}<br>
+    <a target="_blank" href="https://calibration.filscout.com/en/message/{{$val}}">{{$val}}</a><br>
 {{end}}
 
-<br><br>
-水龙头：<a href="https://faucet.calibration.fildev.network/">https://faucet.calibration.fildev.network/</a><br>
-浏览器：<a href="https://calibration.filscout.com/">https://calibration.filscout.com/</a>
+<br>
+水龙头：<a target="_blank" href="https://faucet.calibration.fildev.network/">https://faucet.calibration.fildev.network/</a><br>
+浏览器：<a target="_blank" href="https://calibration.filscout.com/">https://calibration.filscout.com/</a>
 </html>
