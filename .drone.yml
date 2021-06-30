@@ -22,7 +22,7 @@ steps:
       - name: cache
         path: /go/pkg/mod
     commands:
-      - apt update && apt install --no-cache git build-base tzdata
+      - apt update && apt install --no-cache git build-base tzdata jq
       - git submodule update --init --recursive
       - make -C extern/filecoin-ffi
       - go mod download
