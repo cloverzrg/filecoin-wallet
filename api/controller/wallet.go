@@ -49,6 +49,7 @@ func Send(c *gin.Context) {
 	val := c.PostForm("value")
 	cid, err := filecoin.Send(fromAddr, toAddr, val)
 	if err != nil {
+		logger.Error(err)
 		c.JSON(500, err)
 		return
 	}

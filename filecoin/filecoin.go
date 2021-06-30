@@ -70,7 +70,7 @@ func WalletBalanceCache(address2 address.Address) (fil types.FIL, err error) {
 }
 
 func Send(fromAddr, toAddr, val string) (cid cid.Cid, err error) {
-	fil, err := types.ParseFIL(val + "attofil")
+	fil, err := types.ParseFIL(val + "fil")
 	if err != nil {
 		return cid, err
 	}
@@ -113,9 +113,7 @@ func Send(fromAddr, toAddr, val string) (cid cid.Cid, err error) {
 		return cid, err
 	}
 
-	messageWithGas.Cid()
-
-	localWallet, err := wallet.NewWallet(&wallet.MemKeyStore{})
+	localWallet, err := wallet.NewWallet(wallet.NewMemKeyStore())
 	if err != nil {
 		return cid, err
 	}
@@ -135,7 +133,7 @@ func Send(fromAddr, toAddr, val string) (cid cid.Cid, err error) {
 	}
 
 	cid, err = Client.MpoolPush(context.Background(), &types.SignedMessage{
-		Message:   message,
+		Message:   *messageWithGas,
 		Signature: *sign,
 	})
 	return cid, err
