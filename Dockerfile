@@ -22,6 +22,7 @@ RUN make -C extern/filecoin-ffi
 RUN go mod download
 RUN buildflags="-X 'main.BuildTime=`TZ=\"Asia/Shanghai\" date -Iseconds`' -X 'main.GitMessage=`git --no-pager log -1 --oneline`' -X 'main.GoVersion=$(go version)'" && go build -ldflags "$buildflags" -o go-bin
 RUN ./go-bin -v
+RUN rm -rf /go/pkg/mod
 RUN mkdir /app/ && mv go-bin /app/fil-wallet
 RUN mv templates /app/templates
 EXPOSE 80

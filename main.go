@@ -27,6 +27,8 @@ func main() {
 }
 
 func init() {
+	msg := fmt.Sprintf("BuildAt: %s\nBuildBy: %s\nGit：%s", BuildTime, GoVersion, GitMessage)
+	fmt.Println(msg)
 	type cmdParams struct {
 		IsPrintVersion bool
 	}
@@ -36,8 +38,7 @@ func init() {
 	if params.IsPrintVersion {
 		os.Exit(0)
 	}
-	msg := fmt.Sprintf("BuildAt: %s\nBuildBy: %s\nGit：%s", BuildTime, GoVersion, GitMessage)
-	fmt.Println(msg)
+
 	err := db.Connect()
 	if err != nil {
 		logger.Panic(err)
