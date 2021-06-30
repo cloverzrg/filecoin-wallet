@@ -22,7 +22,6 @@ steps:
       - name: cache
         path: /go/pkg/mod
     commands:
-      - echo 'deb http://us.archive.ubuntu.com/ubuntu vivid main universe' >> /etc/apt/sources.list
       - apt-get clean && apt-get update --allow-insecure-repositories && apt install --allow-insecure-repositories git build-base tzdata jq
       - git submodule update --init --recursive
       - make -C extern/filecoin-ffi
