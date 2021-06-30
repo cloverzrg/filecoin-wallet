@@ -23,7 +23,7 @@ steps:
         path: /go/pkg/mod
     commands:
       - apt-get --allow-insecure-repositories update
-      - apt-get install -y git jq g++ gcc libc6-dev libc-dev make hwloc ocl-icd-opencl-dev
+      - apt-get install -y libc6-dev libc-dev make mesa-opencl-icd ocl-icd-opencl-dev gcc git bzr jq pkg-config curl clang build-essential hwloc libhwloc-dev wget
       - git submodule update --init --recursive
       - make -C extern/filecoin-ffi
       - go mod download
