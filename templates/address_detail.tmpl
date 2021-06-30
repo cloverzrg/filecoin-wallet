@@ -8,6 +8,12 @@
 余额：{{.balance}}<br>
 
 <br><br>
+最近一天交易：
+{{range $val := .messages}}
+     {{$val}}<br>
+{{end}}
+
+<br><br>
 水龙头：<a href="https://faucet.calibration.fildev.network/">https://faucet.calibration.fildev.network/</a><br>
 浏览器：<a href="https://calibration.filscout.com/">https://calibration.filscout.com/</a>
 </html>
