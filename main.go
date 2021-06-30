@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"github.com/cloverzrg/filecoin-wallet/api"
 	"github.com/cloverzrg/filecoin-wallet/db"
@@ -9,6 +10,7 @@ import (
 	"github.com/cloverzrg/filecoin-wallet/logger"
 	"github.com/cloverzrg/filecoin-wallet/models"
 	"github.com/filecoin-project/go-address"
+	"os"
 )
 
 var (
@@ -25,6 +27,15 @@ func main() {
 }
 
 func init() {
+	type cmdParams struct {
+		IsPrintVersion bool
+	}
+	params := &cmdParams{}
+	flag.BoolVar(&params.IsPrintVersion, "v", false, "print version")
+	flag.Parse()
+	if params.IsPrintVersion {
+		os.Exit(0)
+	}
 	msg := fmt.Sprintf("BuildAt: %s\nBuildBy: %s\nGit：%s", BuildTime, GoVersion, GitMessage)
 	fmt.Println(msg)
 	err := db.Connect()
