@@ -15,9 +15,9 @@ Address:<br/>
 <a href="/address/{{$val.Address}}">{{$val.Address}}</a>({{$val.CreatedAt}})<br/>
 {{end}}
 <br/>
-<a href="/new">New</a><br/>
-<a href="/new">New(Bls)</a><br/>
-
+<a href="/new">New(secp256k1)</a><br/>
+<a href="/new?type=bls">New(Bls)</a><br/>
+<br/>
 导入:<br>
 <form action="/import" method="post" target="_blank" enctype="application/x-www-form-urlencoded">
     type:<br>
