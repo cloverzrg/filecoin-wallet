@@ -9,10 +9,6 @@ platform:
 clone:
   depth: 1
 
-node:
-  cloud: ali
-  location: hongkong
-
 volumes:
   - name: cache
     host:
@@ -21,12 +17,12 @@ volumes:
 
 steps:
   - name: build
-    image: golang:alpine
+    image: golang:latest
     volumes:
       - name: cache
         path: /go/pkg/mod
     commands:
-      - apk update && apk add --no-cache git build-base tzdata
+      - apt update && apt install --no-cache git build-base tzdata
       - git submodule update --init --recursive
       - go mod download
       - buildflags="-X 'main.BuildTime=`TZ=\"Asia/Shanghai\" date -Iseconds`' -X 'main.GitMessage=`git --no-pager log -1 --oneline`' -X 'main.GoVersion=$(go version)'" && go build -ldflags "$buildflags" -o go-bin
