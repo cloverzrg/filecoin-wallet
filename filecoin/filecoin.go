@@ -2,11 +2,15 @@ package filecoin
 
 import (
 	"context"
+	"encoding/hex"
 	"github.com/cloverzrg/filecoin-wallet/cache"
+	"github.com/cloverzrg/filecoin-wallet/db"
+	"github.com/cloverzrg/filecoin-wallet/models"
 	"github.com/filecoin-project/go-address"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/filecoin-project/lotus/api"
 	"github.com/filecoin-project/lotus/chain/types"
+	"github.com/filecoin-project/lotus/chain/wallet"
 	"github.com/ipfs/go-cid"
 )
 
@@ -63,4 +67,76 @@ func WalletBalanceCache(address2 address.Address) (fil types.FIL, err error) {
 	}
 	cache.BalanceCache.Set(address2.String(), fil, cache.DefaultExpiration)
 	return fil, err
+}
+
+func Send(fromAddr, toAddr, val string) (cid cid.Cid, err error) {
+	fil, err := types.ParseFIL(val + "attofil")
+	if err != nil {
+		return cid, err
+	}
+
+	keyData := models.KeyStore{}
+	err = db.DB.Where("address = ?", fromAddr).First(&keyData).Error
+	if err != nil {
+		return cid, err
+	}
+	fromAddress, err := address.NewFromString(keyData.Address)
+	if err != nil {
+		return cid, err
+	}
+
+	toAddress, err := address.NewFromString(toAddr)
+	if err != nil {
+		return cid, err
+	}
+
+	nonce, err := Client.MpoolGetNonce(context.Background(), fromAddress)
+	if err != nil {
+		return cid, err
+	}
+
+	message := types.Message{
+		Version:    0,
+		To:         toAddress,
+		From:       fromAddress,
+		Nonce:      nonce,
+		Value:      abi.NewTokenAmount(fil.Int64()),
+		GasLimit:   0,
+		GasFeeCap:  abi.TokenAmount{},
+		GasPremium: abi.TokenAmount{},
+		Method:     0,
+		Params:     nil,
+	}
+
+	messageWithGas, err := Client.GasEstimateMessageGas(context.Background(), &message, nil, types.TipSetKey{})
+	if err != nil {
+		return cid, err
+	}
+
+	messageWithGas.Cid()
+
+	localWallet, err := wallet.NewWallet(&wallet.MemKeyStore{})
+	if err != nil {
+		return cid, err
+	}
+	keyBytes, err := hex.DecodeString(keyData.PrivateKey)
+	_, err = localWallet.WalletImport(context.Background(), &types.KeyInfo{
+		Type:       types.KTSecp256k1,
+		PrivateKey: keyBytes,
+	})
+
+	if err != nil {
+		return cid, err
+	}
+
+	sign, err := localWallet.WalletSign(context.Background(), fromAddress, messageWithGas.Cid().Bytes(), api.MsgMeta{})
+	if err != nil {
+		return
+	}
+
+	cid, err = Client.MpoolPush(context.Background(), &types.SignedMessage{
+		Message:   message,
+		Signature: *sign,
+	})
+	return cid, err
 }

@@ -42,3 +42,15 @@ func AddressDetail(c *gin.Context) {
 		"messages": messages,
 	})
 }
+
+func Send(c *gin.Context) {
+	fromAddr := c.PostForm("from")
+	toAddr := c.PostForm("to")
+	val := c.PostForm("value")
+	cid, err := filecoin.Send(fromAddr, toAddr, val)
+	if err != nil {
+		c.JSON(500, err)
+		return
+	}
+	c.JSON(200, cid)
+}

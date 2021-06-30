@@ -19,4 +19,7 @@ func SetRouter(r *gin.Engine) {
 	r.GET("/new", controller.NewKey)
 
 	r.GET("/address/:address", controller.AddressDetail)
+
+
+	r.POST("/send", controller.Send)
 }
