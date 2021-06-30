@@ -50,7 +50,7 @@ func Send(c *gin.Context) {
 	cid, err := filecoin.Send(fromAddr, toAddr, val)
 	if err != nil {
 		logger.Error(err)
-		c.JSON(500, err)
+		c.String(500, err.Error())
 		return
 	}
 	c.JSON(200, cid)
