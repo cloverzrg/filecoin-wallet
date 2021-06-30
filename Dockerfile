@@ -12,7 +12,8 @@
 #CMD ["/app/fil-wallet"]
 FROM golang:latest
 ENV DEBIAN_FRONTEND=noninteractive
-WORKDIR /drone/src/
+ADD . /go/src/
+WORKDIR /go/src/
 RUN ls -lah
 RUN apt-get --allow-insecure-repositories update
 RUN apt-get install -y libc6-dev libc-dev make mesa-opencl-icd ocl-icd-opencl-dev gcc git bzr jq pkg-config curl clang build-essential hwloc libhwloc-dev wget
