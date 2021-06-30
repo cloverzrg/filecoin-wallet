@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 RUN apt-get --allow-insecure-repositories update
-RUN apt-get install -y ca-certificates tzdata
+RUN apt-get install -y ca-certificates tzdata hwloc libhwloc-dev mesa-opencl-icd ocl-icd-opencl-dev libc6-dev libc-dev
 ADD go-bin /app/fil-wallet
 EXPOSE 80
 ENV ENDPOINT https://calibration.node.glif.io
