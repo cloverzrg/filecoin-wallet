@@ -13,9 +13,10 @@
 FROM golang:latest
 ENV DEBIAN_FRONTEND=noninteractive
 RUN ls -lah
+RUN pwd
 RUN apt-get --allow-insecure-repositories update
 RUN apt-get install -y libc6-dev libc-dev make mesa-opencl-icd ocl-icd-opencl-dev gcc git bzr jq pkg-config curl clang build-essential hwloc libhwloc-dev wget
-
+WORKDIR src
 RUN git submodule update --init --recursive
 RUN make -C extern/filecoin-ffi
 RUN go mod download
