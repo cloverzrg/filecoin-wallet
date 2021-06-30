@@ -8,6 +8,7 @@ require (
 	github.com/filecoin-project/lotus v1.10.0
 	github.com/gin-gonic/gin v1.7.2
 	github.com/jinzhu/gorm v1.9.16
+	github.com/sirupsen/logrus v1.7.0
 )
 
 replace github.com/filecoin-project/filecoin-ffi => ./extern/filecoin-ffi

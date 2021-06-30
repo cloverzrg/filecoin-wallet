@@ -1,0 +1,19 @@
+<html lang="zh">
+<h1>
+    Filecoin wallet
+</h1>
+当前连接节点：{{.endpoint}}<br/>
+节点网络：{{.network}}(mainnet:0,Testnet:1)<br/>
+节点状态：
+Version:{{.version.Version}},
+APIVersion:{{.version.APIVersion}},
+BlockDelay:{{.version.BlockDelay}}s
+<br/>
+<br/>
+Address:<br/>
+{{range $val := .list}}
+<a href="/address/{{$val.Address}}">{{$val.Address}}</a>({{$val.CreatedAt}})<br/>
+{{end}}
+<br/>
+<a href="/new">New</a><br/>
+</html>

@@ -1,10 +1,14 @@
 package controller
 
 import (
+	"context"
 	"encoding/hex"
+	"github.com/cloverzrg/filecoin-wallet/config"
 	"github.com/cloverzrg/filecoin-wallet/db"
+	"github.com/cloverzrg/filecoin-wallet/filecoin"
 	"github.com/cloverzrg/filecoin-wallet/logger"
 	"github.com/cloverzrg/filecoin-wallet/models"
+	"github.com/filecoin-project/go-address"
 	"github.com/filecoin-project/lotus/chain/types"
 	"github.com/filecoin-project/lotus/chain/wallet"
 	"github.com/gin-gonic/gin"
@@ -12,12 +16,22 @@ import (
 
 func Index(c *gin.Context) {
 	list := []models.KeyStore{}
-	err := db.DB.Find(&list).Error
+	err := db.DB.Order("id asc").Find(&list).Error
 	if err != nil {
 		c.JSON(500, err)
 		return
 	}
-	c.JSON(200, list)
+	version, err := filecoin.Client.Version(context.Background())
+	if err != nil {
+		c.JSON(500, err)
+		return
+	}
+	c.HTML(200, "index.tmpl", gin.H{
+		"version": version,
+		"network": address.CurrentNetwork,
+		"endpoint": config.Endpoint,
+		"list":  list,
+	})
 }
 
 // bls secp256k1
