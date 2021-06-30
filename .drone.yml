@@ -23,7 +23,7 @@ steps:
         path: /go/pkg/mod
     commands:
       - apt-get --allow-insecure-repositories update
-      - apt-get install git build-essential tzdata jq
+      - apt-get install -y git jq g++ gcc libc6-dev libc6.1-dev libc-dev make
       - git submodule update --init --recursive
       - make -C extern/filecoin-ffi
       - go mod download
