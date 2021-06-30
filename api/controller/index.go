@@ -27,10 +27,10 @@ func Index(c *gin.Context) {
 		return
 	}
 	c.HTML(200, "index.tmpl", gin.H{
-		"version": version,
-		"network": address.CurrentNetwork,
+		"version":  version,
+		"network":  address.CurrentNetwork,
 		"endpoint": config.Endpoint,
-		"list":  list,
+		"list":     list,
 	})
 }
 
@@ -56,5 +56,41 @@ func NewKey(c *gin.Context) {
 		return
 	}
 	logger.Info("new address:", keyStore.Address)
+	c.Redirect(307, "/")
+}
+
+func ImportKey(c *gin.Context) {
+	keyType := c.PostForm("type")
+	privateKey := c.PostForm("privateKey")
+	t := types.KeyType(keyType)
+
+	privateBytes, err := hex.DecodeString(privateKey)
+	if err != nil {
+		logger.Error(err)
+		c.String(500, err.Error())
+		return
+	}
+
+	keyInfo := types.KeyInfo{
+		Type:       t,
+		PrivateKey: privateBytes,
+	}
+	generateKey, err := wallet.NewKey(keyInfo)
+	if err != nil {
+		c.JSON(500, err)
+		return
+	}
+
+	keyStore := models.KeyStore{
+		Type:       generateKey.Type,
+		PrivateKey: hex.EncodeToString(generateKey.PrivateKey),
+		PublicKey:  hex.EncodeToString(generateKey.PublicKey),
+		Address:    generateKey.Address.String(),
+	}
+	err = db.DB.Create(&keyStore).Error
+	if err != nil {
+		c.JSON(500, err)
+		return
+	}
 	c.Redirect(307, "/")
 }

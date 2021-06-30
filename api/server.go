@@ -17,9 +17,9 @@ func Start() error {
 func SetRouter(r *gin.Engine) {
 	r.GET("/", controller.Index)
 	r.GET("/new", controller.NewKey)
+	r.POST("/import", controller.ImportKey)
 
 	r.GET("/address/:address", controller.AddressDetail)
-
 
 	r.POST("/send", controller.Send)
 }
