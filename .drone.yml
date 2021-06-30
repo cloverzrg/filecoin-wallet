@@ -32,9 +32,9 @@ steps:
 
   - name: docker-build-push
     image: plugins/docker
-    volumes:
-      - name: cache
-        path: /go/pkg/mod
+#    volumes:
+#      - name: cache
+#        path: /go/pkg/mod
     when:
       branch:
         - master
