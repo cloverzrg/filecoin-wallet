@@ -27,6 +27,7 @@ steps:
         path: /go/pkg/mod
     commands:
       - apk update && apk add --no-cache git build-base tzdata
+      - git submodule update --init --recursive
       - go mod download
       - buildflags="-X 'main.BuildTime=`TZ=\"Asia/Shanghai\" date -Iseconds`' -X 'main.GitMessage=`git --no-pager log -1 --oneline`' -X 'main.GoVersion=$(go version)'" && go build -ldflags "$buildflags" -o go-bin
       - find . ! -name "." ! -name 'go-bin' ! -name 'Dockerfile' -exec rm -rf {} +
