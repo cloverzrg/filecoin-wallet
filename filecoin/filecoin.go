@@ -119,7 +119,7 @@ func Send(fromAddr, toAddr, val string) (cid cid.Cid, err error) {
 	}
 	keyBytes, err := hex.DecodeString(keyData.PrivateKey)
 	_, err = localWallet.WalletImport(context.Background(), &types.KeyInfo{
-		Type:       types.KTSecp256k1,
+		Type:       keyData.Type,
 		PrivateKey: keyBytes,
 	})
 
