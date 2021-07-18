@@ -12,7 +12,7 @@ import (
 var Client api.FullNodeStruct
 
 func init() {
-	authToken := ""
+	authToken := config.Token
 	headers := http.Header{"Authorization": []string{"Bearer " + authToken}}
 
 	_, err := jsonrpc.NewMergeClient(context.Background(), config.Endpoint, "Filecoin", []interface{}{&Client.Internal, &Client.CommonStruct.Internal}, headers)
